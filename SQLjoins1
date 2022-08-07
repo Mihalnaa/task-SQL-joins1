@@ -1,0 +1,34 @@
+#ЗадачаJoin1
+
+#Вывести города, в которых живут клиенты, оформлявшие заказы в интернет-магазине. 
+#Указать количество заказов в каждый город, этот столбец назвать Количество. 
+#Информацию вывести по убыванию количества заказов, а затем в алфавитном порядке по названию городов.
+
+#РешениеJoin1
+
+SELECT DISTINCT city.name_city , COUNT(buy.buy_id) AS Количество
+FROM 
+    city 
+    INNER JOIN client ON city.city_id = client.city_id
+    LEFT JOIN buy ON client.client_id=buy.client_id
+GROUP BY city.name_city
+ORDER BY  2 DESC, city.name_city
+
+
+#ЗадачаJoin2
+
+#Вывести информацию о каждом заказе: его номер, кто его сформировал (фамилия пользователя),
+#его стоимость (сумма произведений количества заказанных книг и их цены), 
+#в отсортированном по номеру заказа виде.
+
+#РешениеJoin2
+
+SELECT temp.buy_id, name_client, SUM(Стоимость) AS Стоимость
+FROM (SELECT buy_book.buy_id, book.price * buy_book.amount AS Стоимость
+        FROM buy_book
+        INNER JOIN book ON buy_book.book_id = book.book_id) AS temp
+        INNER JOIN buy ON temp.buy_id = buy.buy_id
+        INNER JOIN client ON buy.client_id = client.client_id
+GROUP BY buy_id
+ORDER BY  buy.buy_id
+
